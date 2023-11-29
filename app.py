@@ -4,13 +4,13 @@ import pymysql as mysql
 
 #obj..
 app=Flask(__name__)
-# mydb=mysql.connect(
-#     host='localhost',
-#     user='root',
-#     password='Ksb6419*',
-#     database='attendance'
-# )
-# cursor=mydb.cursor()
+mydb=mysql.connect(
+    host='localhost',
+    user='root',
+    password='Ksb6419*',
+    database='attendance'
+)
+cursor=mydb.cursor()
 
 
 #handlers...
@@ -27,11 +27,32 @@ def admin_login():
 @app.route('/faculty-login')
 def faculty_login():
     return render_template('faculty-login.html')
-#server start..
+
 
 @app.route('/student-login')
 def student_login():
     return render_template('student-login.html')
+
+
+
+
+#admin login handling...
+
+@app.route('/adlogin',methods=['POST'])
+def adlogin():
+    name=request.form['username']
+    password=request.form['password']
+    
+    sql='select * from admin'
+    result=cursor.execute(sql)
+    
+    print(type(result))
+    
+    for i in result.fetchall():
+        print(i)
+    return render_template('admin-home.html')
+    
+    
 
 
 if __name__=='__main__':
