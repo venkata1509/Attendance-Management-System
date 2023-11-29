@@ -47,6 +47,42 @@ def faculty_signup():
 
 
 
+#attendance view by admin
+
+@app.route('/faculty-attendance')
+def facultyattendance():
+    return render_template('faculty-view.html')
+    
+
+@app.route('/student-attendance')
+def studentattendance():
+    return render_template('student-view.html')
+
+
+
+#add or remove by admin
+
+@app.route('/faculty-remove')
+def facultyremove():
+    return render_template('faculty-addremove.html')
+    
+
+@app.route('/student-remove')
+def studentremove():
+    return render_template('student-addremove.html')
+
+
+@app.route('/faculty-add')
+def facultyadd():
+    return render_template('faculty-addremove.html')
+    
+
+@app.route('/student-add')
+def studentadd():
+    return render_template('student-addremove.html')
+
+
+
 #admin login handling...
 
 @app.route('/adlogin',methods=['POST'])
@@ -54,14 +90,18 @@ def adlogin():
     name=request.form['username']
     password=request.form['password']
     
-    sql='select * from admin'
-    result=cursor.execute(sql)
-    
+    print(name,password)
+    sql= 'SELECT * FROM admin'
+    cursor.execute(sql)
+    result = cursor.fetchall()
     print(type(result))
     
-    for i in result.fetchall():
+    for i in result:
         print(i)
-    return render_template('admin-home.html')
+        if i[0]==name and i[1]==password:
+            return render_template('admin-home.html')
+        else:
+            return render_template('admin-login.html',m='Please enter valid details')
     
     
 
