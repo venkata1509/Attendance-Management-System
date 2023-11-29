@@ -43,14 +43,18 @@ def adlogin():
     name=request.form['username']
     password=request.form['password']
     
-    sql='select * from admin'
-    result=cursor.execute(sql)
-    
+    print(name,password)
+    sql= 'SELECT * FROM admin'
+    cursor.execute(sql)
+    result = cursor.fetchall()
     print(type(result))
     
-    for i in result.fetchall():
+    for i in result:
         print(i)
-    return render_template('admin-home.html')
+        if i[0]==name and i[1]==password:
+            return render_template('admin-home.html')
+        else:
+            return render_template('admin-login.html',m='Please enter valid details')
     
     
 
