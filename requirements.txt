@@ -1,0 +1,3 @@
+flask
+render_template
+pymysql
