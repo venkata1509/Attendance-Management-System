@@ -47,6 +47,42 @@ def faculty_signup():
 
 
 
+#attendance view by admin
+
+@app.route('/faculty-attendance')
+def facultyattendance():
+    return render_template('faculty-view.html')
+    
+
+@app.route('/student-attendance')
+def studentattendance():
+    return render_template('student-view.html')
+
+
+
+#add or remove by admin
+
+@app.route('/faculty-remove')
+def facultyremove():
+    return render_template('faculty-addremove.html')
+    
+
+@app.route('/student-remove')
+def studentremove():
+    return render_template('student-addremove.html')
+
+
+@app.route('/faculty-add')
+def facultyadd():
+    return render_template('faculty-addremove.html')
+    
+
+@app.route('/student-add')
+def studentadd():
+    return render_template('student-addremove.html')
+
+
+
 #admin login handling...
 
 @app.route('/adlogin',methods=['POST'])
