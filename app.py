@@ -23,6 +23,10 @@ def start():
 @app.route('/admin-login')
 def admin_login():
     return render_template('admin-login.html')
+@app.route('/admin-home')
+def admin_home():
+    return render_template('admin-home.html')
+
 
 @app.route('/faculty-login')
 def faculty_login():
@@ -33,6 +37,13 @@ def faculty_login():
 def student_login():
     return render_template('student-login.html')
 
+@app.route('/student-signup')
+def student_signup():
+    return render_template('student-signup.html')
+
+@app.route('/faculty-signup')
+def faculty_signup():
+    return render_template('faculty-signup.html')
 
 
 

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Remove Student</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .form {
+            background-color: #eaeaea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button.remove {
+            background-color: #e74c3c;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .data-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            background-color: #f9f9f9;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Add/Remove Student</h1>
+
+    <form id="studentForm" class="form">
+        <label for="studentId">Student ID:</label>
+        <input type="text" id="studentId" required>
+        <label for="studentName">Name:</label>
+        <input type="text" id="studentName" required>
+        <label for="studentAge">Age:</label>
+        <input type="number" id="studentAge" required>
+        <label for="studentDepartment">Department:</label>
+        <select id="studentDepartment" required>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="Mech">Mech</option>
+            <option value="Civ">Civ</option>
+            <option value="IT">IT</option>
+            <option value="DS">DS</option>
+            <option value="AI">AI</option>
+        </select>
+
+        <div class="button-container">
+            <button type="button" onclick="addStudent()">Add Student</button>
+            <button class="remove" onclick="removeStudent()">Remove Student</button>
+        </div>
+    </form>
+
+    <script>
+        function addStudent() {
+            const studentId = document.getElementById('studentId').value;
+            const studentName = document.getElementById('studentName').value;
+            const studentAge = document.getElementById('studentAge').value;
+            const studentDepartment = document.getElementById('studentDepartment').value;
+
+            const table = document.getElementById('studentTable');
+            const row = table.insertRow(-1);
+            row.insertCell(0).textContent = studentId;
+            row.insertCell(1).textContent = studentName;
+            row.insertCell(2).textContent = studentAge;
+            row.insertCell(3).textContent = studentDepartment;
+            row.insertCell(4).innerHTML = '<button class="remove" onclick="removeRow(this)">Remove</button>';
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function removeStudent() {
+            const studentId = prompt("Enter Student ID to remove:");
+            const table = document.getElementById('studentTable');
+            
+            
+            for (let i = 1; i < table.rows.length; i++) {
+                if (table.rows[i].cells[0].textContent === studentId) {
+                    table.deleteRow(i);
+                    break;
+                }
+            }
+        }
+    </script>
+</div>
+
+</body>
+</html>
