@@ -8,8 +8,11 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../static/index.css" />
     <title>Home Page</title>
   </head>
   <body>
@@ -19,7 +22,7 @@
       </div>
       <div class="home-page">
         <div class="home-page-body-image home-page-body">
-          <img src="../images/ATTENDANCE.png" alt="attendance" />
+          <img src="../static/images/ATTENDANCE.png" alt="attendance" />
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas nemo
             ullam, repudiandae, neque quibusdam nostrum sed magni eius
@@ -28,18 +31,24 @@
           </p>
         </div>
         <div class="home-page-body-buttons home-page-body">
-            <a href="admin-login.html">
-          <div class="admin-button button">
-            <p>Admin Login &nbsp;  <i class="fa-solid fa-user-tie"></i></p>
-          </div>
+          <a href="/admin-login">
+            <div class="admin-button button">
+              <p>Admin Login &nbsp; <i class="fa-solid fa-user-tie"></i></p>
+            </div>
           </a>
-          <div class="faculty-button button">
-            <p>Faculty Login &nbsp;  <i class="fa-solid fa-screwdriver-wrench"></i></p>
-          </div>
-          <div class="student-button button">
-            <p>Student Login &nbsp; <i class="fa-solid fa-person"></i></p>
-
-          </div>
+          <a href="/faculty-login">
+            <div class="faculty-button button">
+              <p>
+                Faculty Login &nbsp;
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+              </p>
+            </div>
+          </a>
+          <a href="student-login">
+            <div class="student-button button">
+              <p>Student Login &nbsp; <i class="fa-solid fa-person"></i></p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
