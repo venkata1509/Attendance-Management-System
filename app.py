@@ -1,5 +1,4 @@
 from flask import Flask,render_template,redirect,request 
-import pymysql as mysql
 
 
 from pymongo import MongoClient
