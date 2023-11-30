@@ -19,7 +19,7 @@
           <div class="home-page-title" style="margin: 0;">
             <!-- <p>Faculty Sign-up</p> -->
             <div class="pt-1 mb-4">
-                <a href="/">
+                <a href="/admin-home">
                 <button class="btn btn-dark btn-lg" type="button">back</button>
                 </a>
                 <!-- <a href="/faculty-login">
@@ -30,60 +30,59 @@
           </div>
          
         <article class="card-body">
-        <form action="/student-add-1" method="post">
+          <form action="/student-add-1" method="post">
             <div class="form-row">
                 <div class="col form-group">
                     <label>First name </label>   
-                      <input type="text" class="form-control" placeholder="" name="fname">
+                      <input type="text" class="form-control" placeholder="" name="fname" required>
                 </div> <!-- form-group end.// -->
                 <div class="col form-group">
                     <label>Last name</label>
-                      <input type="text" class="form-control" placeholder=" " name="lname">
+                      <input type="text" class="form-control" placeholder=" " name="lname" required>
                 </div> <!-- form-group end.// -->
             </div> <!-- form-row end.// -->
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" class="form-control" placeholder="" name="username">
+                <input type="text" class="form-control" placeholder="" name="username" required>
                 
             </div> <!-- form-group end.// -->
             <div class="form-group">
                     <label class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" value="option1">
+                  <input class="form-check-input" type="radio" name="gender" value="Male" required>
                   <span class="form-check-label"> Male </span>
                 </label>
                 <label class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" value="option2">
+                  <input class="form-check-input" type="radio" name="gender" value="Female" required>
                   <span class="form-check-label"> Female</span>
                 </label>
             </div> <!-- form-group end.// -->
             <div class="form-group">
-                <label class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="designation" value="option1">
-              <span class="form-check-label"> Faculty </span>
-            </label>
             <label class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="designation" value="option2">
+              <input class="form-check-input" type="radio" name="designation" value="Student" required>
               <span class="form-check-label"> Student</span>
             </label>
         </div> 
         <div class="form-group">
             <label>Department</label>
-            <input type="text" class="form-control" placeholder="" name="department">
-            
+            <input type="text" class="form-control" placeholder="CSE/ECE/IT/CSD/CAI/MECH/EEE" name="department" required>
         </div>
             <div class="form-group">
                 <label>Create password</label>
-                <input class="form-control" type="password" name="password">
+                <input class="form-control" type="password" name="password" required>
                 <label>Confirm password</label>
-                <input class="form-control" type="password" name="cpassword">
+                <input class="form-control" type="password" name="cpassword" required>
+               <p>{{r}}</p> 
             </div> <!-- form-group end.// -->  
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block"> Add Student</button>
-            </div> <!-- form-group// -->      <br>
-            <div>{{result}}</div>
+                <button type="submit" class="btn btn-primary btn-block"> Register  </button>
+            </div> <!-- form-group// -->      
             
         </form>
+
         </div>
+        
       </section>
+
+      <p>{{m}}</p>
 </body>
 </html>

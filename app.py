@@ -195,22 +195,98 @@ def studentattendance():
 def facultyremove():
     return render_template('faculty-removefaculty.html')
     
+@app.route('/faculty-remove-1',methods=['post'])
+def facultyremove1():
+    username=request.form['username']
+    coll=db['faculty']
+    coll.delete_one({'username':username})
+    return render_template('faculty-removefaculty.html',result="Removed Successfully")
+
 
 @app.route('/student-remove')
 def studentremove():
     return render_template('student-removestudent.html')
 
+@app.route('/student-remove-1',methods=['post'])
+def studentremove1():
+    username=request.form['username']
+    coll=db['student']
+    coll.delete_one({'username':username})
+    return render_template('student-removestudent.html',result="Removed Successfully")
+
 
 @app.route('/faculty-add')
 def facultyadd():
     return render_template('faculty-addfaculty.html')
+#handle..
+@app.route('/faculty-add-1', methods=['post'])
+def facultyadd1():
+    coll=db['faculty']
+    fname=request.form['fname']
+    lname=request.form['lname']
+    name=fname+' '+lname
+    username=request.form['username']
+    gender=request.form['gender']
+    designation=request.form['designation']
+    department=request.form['department']
+    password=request.form['password']
+    cpassword=request.form['cpassword']
+    userid=uid(department,designation)
+    
+    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department,'password': password,'flag':'0'}
+    
+    print(fname,lname,username,gender,designation,department,password,cpassword)
+    if fname=='' or lname=='' or username=='' or gender=='' or designation=='' or password=='' or cpassword=='' or department=='':
+        return render_template('faculty-addfaculty.html',m='Please Fill all details')
+    if(password != cpassword):
+        return render_template('faculty-addfaculty.html',r='Confirm password not matched')
+    
+    
+    #check faculty already exists or not..
+    d1=list(coll.find({'username':username}))
+    
+    if len(d1)>0:
+        return render_template('faculty-addfaculty.html',m='Username Already exists please use another username!!!')
+    else:
+        res1=coll.insert_one(d)
+        return redirect('/facultyview')
     
 
 @app.route('/student-add')
 def studentadd():
     return render_template('student-addstudent.html')
-
-
+#handler..
+@app.route('/student-add-1', methods=['post'])
+def studentadd1():
+    coll=db['student']
+    fname=request.form['fname']
+    lname=request.form['lname']
+    name=fname+' '+lname
+    username=request.form['username']
+    gender=request.form['gender']
+    designation=request.form['designation']
+    department=request.form['department']
+    password=request.form['password']
+    cpassword=request.form['cpassword']
+    userid=uid(department,designation)
+    
+    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department,'password': password,'flag':'0'}
+    
+    print(fname,lname,username,gender,designation,department,password,cpassword)
+    if fname=='' or lname=='' or username=='' or gender=='' or designation=='' or password=='' or cpassword=='' or department=='':
+        return render_template('student-addstudent.html',m='Please Fill all details')
+    if(password != cpassword):
+        return render_template('student-addstudent.html',r='Confirm password not matched')
+    
+    
+    #check faculty already exists or not..
+    d1=list(coll.find({'username':username}))
+    
+    if len(d1)>0:
+        return render_template('student-addstudent.html',m='Username Already exists please use another username!!!')
+    else:
+        res1=coll.insert_one(d)
+        return redirect('/studentview')
 
 #admin login handling...
 
@@ -221,7 +297,7 @@ def adlogin():
     name=request.form['username']
     password=request.form['password']
     if(name=='' and password==''):
-        return render_template('admin-logdayin.html',m='Please fill all details!!')
+        return render_template('admin-login.html',m='Please fill all details!!')
     
     
     print(name,password)
@@ -283,7 +359,6 @@ def facultysignup():
         
 
 #faculty-login
-
 @app.route('/faculty-login',methods=['POST'])
 def facultylogin():
     coll=db['faculty']
@@ -379,24 +454,31 @@ def studentlogin():
         
         acoll=db['attend']
         
-        d=acoll.find()
+        d=acoll.find({'Id':Id})
         d=list(d)
+        print('Data:------>',d)
         k=[]
         c=0
         p=0
-        for i in d:
-            if i['Id']==Id:
-                c=c+1
-                dummy=[]
-                dummy.append(i['date'])
-                dummy.append(day_from_date(i['date']))
-                dummy.append(i['status'])
-                if(i['status']=='Present'):
-                    p+=1
-                k.append(dummy)
-        return render_template('student-details-view.html',Id=Id,name=name,data=k,att=int((p/c)*100))
-    
-    else:
+        
+        if len(d)==0:
+            print('No attendence found')
+            return render_template('student-details-view.html',Id=Id,name=name,att=int(0))
+
+        else:
+            for i in d:
+                if i['Id']==Id:
+                    c=c+1
+                    dummy=[]
+                    dummy.append(i['date'])
+                    dummy.append(day_from_date(i['date']))
+                    dummy.append(i['status'])
+                    if(i['status']=='Present'):
+                        p+=1
+                    k.append(dummy)
+            return render_template('student-details-view.html',Id=Id,name=name,data=k,att=int((p/c)*100))
+
+    else :
         return render_template('student-login.html',m='Admin Review Pending [OR] Enter correct details ')
 
 
@@ -456,26 +538,7 @@ def removeuser(i):
     return render_template('requests.html')
 
 
-
-'''
-
-coll=db['student']
-    d=coll.find()
-    d=list(d)
-    k=[]
-    for i in d:
-        if i['flag']=='0':
-            dummy=[]
-            dummy.append(i['Id'])
-            dummy.append(i['name'])
-            dummy.append(i['Department'])
-            k.append(dummy)
-
-'''
-
-
-
-
+#faculty attendance handling..
 
 
 @app.route('/present/<i>',methods=['GET','POST'])
@@ -561,63 +624,9 @@ def studentremove1():
     doc.delete_one(id)
     return render_template('student-removestudent.html',result="Removed Successfully")
 
-@app.route('/faculty-add')
-def facultyadd():
-    return render_template('faculty-addfaculty.html')
 
-@app.route('/faculty-add-1', methods=['post'])
-def facultyadd1():
-    fname=request.form['fname']
-    lname=request.form['lname']
-    uname=request.form['username']
-    gender=request.form['gender']
-    desig=request.form['designation']
-    dept=request.form['department']
-    pas=request.form['password']
-    doc=client['attendance']['admin'] #faculty collections
-    data=doc.find()
-    for i in data:
-        if uname == i['uname']:#collection lo ichina field name ivvali
-            return render_template('faculty-addfaculty.html',result="existing user") 
-    doc.insert_one({
-        'fname':fname,     #all field names in faculty collection in mongodb atlas....
-        'lname':lname,
-        'uname':uname,
-        'gender':gender,
-        'desig':desig,
-        'dept':dept,
-        'pas':pas,
-    })
-    return render_template('faculty-addfaculty.html',result="Registered Successfully")
 
-@app.route('/student-add')
-def studentadd():
-    return render_template('student-addstudent.html')
 
-@app.route('/student-add-1', methods=['post'])
-def studentadd1():
-    fname=request.form['fname']
-    lname=request.form['lname']
-    uname=request.form['username']
-    gender=request.form['gender']
-    desig=request.form['designation']
-    dept=request.form['department']
-    pas=request.form['password']
-    doc=client['attendance']['admin'] #faculty collections
-    data=doc.find() 
-    for i in data:
-        if uname == i['uname']:#collection lo ichina field name ivvali
-            return render_template('faculty-addfaculty.html',result="existing user") 
-    doc.insert_one({
-        'fname':fname,     #all field names in student collection in mongodb atlas....
-        'lname':lname,
-        'uname':uname,
-        'gender':gender,
-        'desig':desig,
-        'dept':dept,
-        'pas':pas,
-    })
-    return render_template('student-addstudent.html',result="Registered Successfully")
 
 
 '''
