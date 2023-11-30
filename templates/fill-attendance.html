@@ -36,11 +36,28 @@
               <th class="car">Name</th>
               <th class="car">Attedence Update</th>
             </tr>
+
+      
+
+
+
+            {% for i in data %}
             <tr>
-                <td class="car"></td>
-                <td class="car"></td>
-                <td class="car" style="width:300px" ><button class="btn btn-success" style="margin-right:10px">Present</button><button class="btn  btn-danger" style="margin-left:35px">Absent</button></td>
+              <td class="car">{{ i[0] }}</td>
+              <td class="car">{{ i[1] }}</td>
+              <td class="car" style="width:300px" >
+
+                <form action="/present/{{i}}" methods="post">
+                  <button class="btn btn-success" style="margin-right:10px; " type="submit">Present</button>
+                  </form>
+                  <form action="/absent/{{i}}" methods="post">
+                    <button class="btn  btn-danger" style="margin-left:35px;" type="submit">Absent</button></td>
+                  </form>
+
+                
+                
               </tr>
+              {% endfor %}
           </table>
     </div>
   </body>

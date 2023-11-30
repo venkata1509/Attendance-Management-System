@@ -1,4 +1,5 @@
 from flask import Flask,render_template,redirect,request 
+import datetime
 
 import json
 
@@ -121,6 +122,7 @@ def studentview():
     d=list(d)
     k=[]
     for i in d:
+        if i['flag']=='0':
             dummy=[]
             dummy.append(i['Id'])
             dummy.append(i['name'])
@@ -249,9 +251,20 @@ def facultylogin():
    
     res= list(res)  # Convert the cursor to a list of documents
     print(res)
-
+    
+    coll=db['student']
+    d=coll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            coll.update_one({'Id':i['Id']},{'$set':{'flag':'0'}})
+            k.append(dummy)
     if res:
-        return render_template('fill-attendance')
+        # coll.update_many({'flag':'0'})
+        return render_template('fill-attendance.html',data=k)
     else:
         return render_template('faculty-login.html',m='Admin Review Pending [OR] Enter correct details ')
     
@@ -313,7 +326,7 @@ def studentlogin():
 
     if res:
         
-        return render_template('student-details-view')
+        return render_template('student-details-view.html')
     
     else:
         return render_template('student-login.html',m='Admin Review Pending [OR] Enter correct details ')
@@ -343,7 +356,7 @@ def add_user(i):
     department = i[4]
     password=i[5]
     print(password)
-    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department,'password': password}
+    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department,'password': password,'flag':'0'}
     
     if designation == 'Student':
         scoll.insert_one(d)
@@ -373,6 +386,80 @@ def removeuser(i):
         sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})    
 
     return render_template('requests.html')
+
+
+
+'''
+
+coll=db['student']
+    d=coll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+        if i['flag']=='0':
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            dummy.append(i['Department'])
+            k.append(dummy)
+
+'''
+
+
+
+
+
+
+@app.route('/present/<i>',methods=['GET','POST'])
+def presentuser(i):
+    print(i)
+    i=ast.literal_eval(i)
+    sigcoll = db['attend']
+    scoll=db['student']
+    Id= i[0]
+    name= i[1]
+    sigcoll.insert_one({'Id': Id ,'name':name,'date':str(datetime.datetime.now().date()),'status':'Present'})
+    scoll.update_one({'Id': Id}, {'$set': {'flag': '1'}})
+    
+    d=scoll.find()
+    d=list(d)
+    k=[]
+    
+    for i in d:
+        if i['flag'] =='0':
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            k.append(dummy)
+    print(k)
+    return render_template('fill-attendance.html',data=k)
+
+
+@app.route('/absent/<i>',methods=['GET','POST'])
+def absentuser(i):
+    print(i)
+    i=ast.literal_eval(i)
+    sigcoll = db['attend']
+    scoll=db['student']
+    Id= i[0]
+    name= i[1]
+    scoll.update_one({'Id': Id}, {'$set': {'flag': '1'}})
+
+    sigcoll.insert_one({'Id': Id ,'name':name,'date':str(datetime.datetime.now().date()),'status':'Absent'})
+    
+    d=scoll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+        if i['flag']=='0':
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            k.append(dummy)
+    return render_template('fill-attendance.html',data=k)
+
+
+
 
 if __name__=='__main__':
     
