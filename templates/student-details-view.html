@@ -49,8 +49,8 @@
     <div>
       <table border="0" class="tab" align="center">
         <tr>
-          <th><h3 class="card">ID:</h3></th>
-          <th><h3 class="card">Name:</h3></th>
+          <th><h3 class="card">ID: {{Id}}</h3></th>
+          <th><h3 class="card">Name: {{name}}</h3></th>
         </tr>
       </table>
     </div>
@@ -62,116 +62,21 @@
           <th class="car">Day</th>
           <th class="car">Status</th>
         </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
+
+         {% for i in data %}
           <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
+            <td class="car">{{ i[0] }}</td>
+            <td class="car">{{ i[1] }}</td>
+            <td class="car">{{ i[2] }}</td>
           </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
+         {% endfor %}
+
+
       </table>
     </div>
     <br />
     <div>
-      <h3 class="card">Attedance report: %</h3>
+      <h3 class="card">Attedance report:{{att}}%</h3>
     </div>
   </body>
 </html>

@@ -25,7 +25,7 @@ app=Flask(__name__)
 
 #id generator..
 
-def uid(desg,dept):
+def uid(dept,desg):
     icoll=db['increments']
     d=icoll.find()
     print(d)
@@ -43,7 +43,53 @@ def uid(desg,dept):
     return s
     
 
+#day from date..
 
+
+def is_leap_year(year):
+    # Function to check if a year is a leap year
+    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+
+def count_odd_days(year):
+    # Function to count the odd days for a given year
+    # Each non-leap year has 1 odd day, and each leap year has 2 odd days
+    odd_days = 1 if not is_leap_year(year) else 2
+    return odd_days
+
+def get_days_in_month(month, year):
+    # Function to get the number of days in a given month
+    days_in_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if month == 2 and is_leap_year(year):
+        return 29
+    return days_in_month[month]
+
+def count_days_since_1st_Jan_1AD(day, month, year):
+    # Function to count the total number of days from 1st January 1 AD to the input date
+    total_days = 0
+
+    # Years from 1 AD to the input year (excluding the input year)
+    for y in range(1, year):
+        total_days += count_odd_days(y)
+
+    # Months from January to the input month (excluding the input month)
+    for m in range(1, month):
+        total_days += get_days_in_month(m, year)
+
+    total_days += day  # Days from 1st of the input month to the input day (we don't subtract 1 here)
+
+    return total_days
+
+def find_day_of_week(day, month, year):
+    # Calculate the day of the week using 1st January 1 AD as the reference date
+    days_of_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    total_days = count_days_since_1st_Jan_1AD(day, month, year) % 7
+    return days_of_week[total_days]
+
+# Example usage:
+def day_from_date(d):
+    year, month, day = map(int, d.split('-'))
+    day_of_week = find_day_of_week(day, month, year)
+    return day_of_week
 
 #handlers...
 @app.route('/')
@@ -122,7 +168,6 @@ def studentview():
     d=list(d)
     k=[]
     for i in d:
-        if i['flag']=='0':
             dummy=[]
             dummy.append(i['Id'])
             dummy.append(i['name'])
@@ -134,12 +179,13 @@ def studentview():
 @app.route('/faculty-attendance')
 def facultyattendance():
     
-    return render_template('faculty-view.html')
+    return redirect('/facultyview')
+
     
 
 @app.route('/student-attendance')
 def studentattendance():
-    return render_template('student-view.html')
+    return redirect('/studentview')
 
 
 
@@ -175,7 +221,7 @@ def adlogin():
     name=request.form['username']
     password=request.form['password']
     if(name=='' and password==''):
-        return render_template('admin-login.html',m='Please fill all details!!')
+        return render_template('admin-logdayin.html',m='Please fill all details!!')
     
     
     print(name,password)
@@ -264,7 +310,7 @@ def facultylogin():
             k.append(dummy)
     if res:
         # coll.update_many({'flag':'0'})
-        return render_template('fill-attendance.html',data=k)
+        return render_template('fill-attendance.html',data=k,dd=str(datetime.datetime.now().date()))
     else:
         return render_template('faculty-login.html',m='Admin Review Pending [OR] Enter correct details ')
     
@@ -311,22 +357,44 @@ def studentsignup():
 @app.route('/student-login',methods=['POST'])
 def studentlogin():
     coll=db['student']
+    
     username=request.form['username']
     password=request.form['password']
     
     if username=='' or  password=='':
         return render_template('student-login.html',m='Please fill all details')
 
-        
-    
     res=coll.find({'username':username, 'password':password})
    
     res= list(res)  # Convert the cursor to a list of documents
     print(res)
-
+ 
+    
     if res:
+        #detatils of the student ....
+       
+        Id=res[0]['Id']
+        name=res[0]['name']
         
-        return render_template('student-details-view.html')
+        
+        acoll=db['attend']
+        
+        d=acoll.find()
+        d=list(d)
+        k=[]
+        c=0
+        p=0
+        for i in d:
+            if i['Id']==Id:
+                c=c+1
+                dummy=[]
+                dummy.append(i['date'])
+                dummy.append(day_from_date(i['date']))
+                dummy.append(i['status'])
+                if(i['status']=='Present'):
+                    p+=1
+                k.append(dummy)
+        return render_template('student-details-view.html',Id=Id,name=name,data=k,att=int((p/c)*100))
     
     else:
         return render_template('student-login.html',m='Admin Review Pending [OR] Enter correct details ')
@@ -432,7 +500,7 @@ def presentuser(i):
             dummy.append(i['name'])
             k.append(dummy)
     print(k)
-    return render_template('fill-attendance.html',data=k)
+    return render_template('fill-attendance.html',data=k,dd=str(datetime.datetime.now().date()))
 
 
 @app.route('/absent/<i>',methods=['GET','POST'])
@@ -456,7 +524,7 @@ def absentuser(i):
             dummy.append(i['Id'])
             dummy.append(i['name'])
             k.append(dummy)
-    return render_template('fill-attendance.html',data=k)
+    return render_template('fill-attendance.html',data=k,dd=str(datetime.datetime.now().date()))
 
 
 
@@ -466,3 +534,92 @@ if __name__=='__main__':
     app.run(host='0.0.0.0',port=5000)
     
 
+
+'''
+
+#add or remove by admin
+
+@app.route('/faculty-remove')
+def facultyremove():
+    return render_template('faculty-removefaculty.html')
+
+@app.route('/faculty-remove-1',methods=['post'])
+def facultyremove1():
+    id=request.form['username']
+    doc=client['attendance']['admin']
+    doc.delete_one(id)
+    return render_template('faculty-addfaculty.html',result="Removed Successfully")
+    
+
+@app.route('/student-remove')
+def studentremove():
+    return render_template('student-removestudent.html')
+
+
+@app.route('/student-remove-1',methods=['post'])
+def studentremove1():
+    id=request.form['username']
+    doc=client['attendance']['admin']
+    doc.delete_one(id)
+    return render_template('student-removestudent.html',result="Removed Successfully")
+
+@app.route('/faculty-add')
+def facultyadd():
+    return render_template('faculty-addfaculty.html')
+
+@app.route('/faculty-add-1', methods=['post'])
+def facultyadd1():
+    fname=request.form['fname']
+    lname=request.form['lname']
+    uname=request.form['username']
+    gender=request.form['gender']
+    desig=request.form['designation']
+    dept=request.form['department']
+    pas=request.form['password']
+    doc=client['attendance']['admin'] #faculty collections
+    data=doc.find()
+    for i in data:
+        if uname == i['uname']:#collection lo ichina field name ivvali
+            return render_template('faculty-addfaculty.html',result="existing user") 
+    doc.insert_one({
+        'fname':fname,     #all field names in faculty collection in mongodb atlas....
+        'lname':lname,
+        'uname':uname,
+        'gender':gender,
+        'desig':desig,
+        'dept':dept,
+        'pas':pas,
+    })
+    return render_template('faculty-addfaculty.html',result="Registered Successfully")
+
+@app.route('/student-add')
+def studentadd():
+    return render_template('student-addstudent.html')
+
+@app.route('/student-add-1', methods=['post'])
+def studentadd1():
+    fname=request.form['fname']
+    lname=request.form['lname']
+    uname=request.form['username']
+    gender=request.form['gender']
+    desig=request.form['designation']
+    dept=request.form['department']
+    pas=request.form['password']
+    doc=client['attendance']['admin'] #faculty collections
+    data=doc.find() 
+    for i in data:
+        if uname == i['uname']:#collection lo ichina field name ivvali
+            return render_template('faculty-addfaculty.html',result="existing user") 
+    doc.insert_one({
+        'fname':fname,     #all field names in student collection in mongodb atlas....
+        'lname':lname,
+        'uname':uname,
+        'gender':gender,
+        'desig':desig,
+        'dept':dept,
+        'pas':pas,
+    })
+    return render_template('student-addstudent.html',result="Registered Successfully")
+
+
+'''
