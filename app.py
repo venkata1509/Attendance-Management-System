@@ -15,13 +15,7 @@ db = client['attendance']
 
 #obj..
 app=Flask(__name__)
-mydb=mysql.connect(
-    host='localhost',
-    user='root',
-    password='Ksb6419*',
-    database='attendance'
-)
-cursor=mydb.cursor()
+
 
 
 
