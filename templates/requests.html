@@ -91,35 +91,6 @@
           </table>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-      function addfunction(i) {
-          $.ajax({
-              type: "POST",
-              url: "/add_user",  // Update the URL with your Flask route for adding users
-              data: { username: username },
-              success: function(response) {
-                  console.log(response);
-              },
-              error: function(error) {
-                  console.log(error);
-              }
-          });
-      }
-  
-      function removefunction(username) {
-          $.ajax({
-              type: "POST",
-              url: "/remove_user",  // Update the URL with your Flask route for removing users
-              data: { username: username },
-              success: function(response) {
-                  console.log(response);
-              },
-              error: function(error) {
-                  console.log(error);
-              }
-          });
-      }
-  </script>
   </body>
 
 
