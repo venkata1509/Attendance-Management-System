@@ -251,7 +251,7 @@ def facultylogin():
     print(res)
 
     if res:
-        return render_template('faculty-login.html',m='Login Succeessfully')
+        return render_template('fill-attendance')
     else:
         return render_template('faculty-login.html',m='Admin Review Pending [OR] Enter correct details ')
     
@@ -312,12 +312,16 @@ def studentlogin():
     print(res)
 
     if res:
-        return render_template('student-login.html',m='Login Succeessfully')
+        
+        return render_template('student-details-view')
+    
     else:
         return render_template('student-login.html',m='Admin Review Pending [OR] Enter correct details ')
 
 
 
+
+#admin request handling..
 
 @app.route('/add_user/<i>',methods=['GET','POST'])
 def add_user(i):
