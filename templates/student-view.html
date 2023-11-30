@@ -36,6 +36,12 @@
               Search
             </button>
           </form>
+         
+        </div>
+        <div class="mb-4" style="margin-left:100px;">
+          <a href="/admin-home">
+            <button class="btn btn-dark btn-lg" type="button">Home</button>
+          </a>
         </div>
       </nav>
     </div>
@@ -47,11 +53,14 @@
               <th class="car">Student Name</th>
               <th class="car">Department</th>
             </tr>
+
+            {% for i in data %}
             <tr>
-                <td class="car"></td>
-                <td class="car"></td>
-                <td class="car"></td>
-              </tr>
+              <td class="car">{{ i[0] }}</td>
+              <td class="car">{{ i[1] }}</td>
+              <td class="car">{{ i[2] }}</td>
+            </tr>
+            {% endfor %}
             
           </table>
     </div>
