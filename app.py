@@ -193,22 +193,22 @@ def studentattendance():
 
 @app.route('/faculty-remove')
 def facultyremove():
-    return render_template('faculty-addremove.html')
+    return render_template('faculty-removefaculty.html')
     
 
 @app.route('/student-remove')
 def studentremove():
-    return render_template('student-addremove.html')
+    return render_template('student-removestudent.html')
 
 
 @app.route('/faculty-add')
 def facultyadd():
-    return render_template('faculty-addremove.html')
+    return render_template('faculty-addfaculty.html')
     
 
 @app.route('/student-add')
 def studentadd():
-    return render_template('student-addremove.html')
+    return render_template('student-addstudent.html')
 
 
 
@@ -533,8 +533,6 @@ if __name__=='__main__':
     
     app.run(host='0.0.0.0',port=5050)
     
-
-
 '''
 
 #add or remove by admin
