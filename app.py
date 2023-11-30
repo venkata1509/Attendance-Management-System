@@ -4,6 +4,8 @@ import json
 
 from pymongo import MongoClient
 
+import ast
+
 connection_string = 'mongodb+srv://kantashowribabu:showribabu@cluster1.es2isby.mongodb.net/'
 
 # Create the MongoDB client
@@ -89,9 +91,42 @@ def requestshandle():
             dummy.append(uid(i['department'],i['designation']))
             dummy.append(i['designation'])
             dummy.append(i['department'])
+            dummy.append(i['password'])
             k.append(dummy)
+    print(k)
     return render_template('requests.html',data=k)
 
+
+#faculty view..
+@app.route('/facultyview')
+def facultyview():    
+    coll=db['faculty']
+    d=coll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            dummy.append(i['Department'])
+            k.append(dummy)
+    return render_template('faculty-view.html',data=k)
+
+#student view 
+
+@app.route('/studentview')
+def studentview():    
+    coll=db['student']
+    d=coll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            dummy.append(i['Department'])
+            k.append(dummy)
+    return render_template('student-view.html',data=k)
 #attendance view by admin
 
 @app.route('/faculty-attendance')
@@ -203,16 +238,12 @@ def facultysignup():
 
 @app.route('/faculty-login',methods=['POST'])
 def facultylogin():
-    coll=db['signup']
+    coll=db['faculty']
     username=request.form['username']
     password=request.form['password']
     
     if username=='' or  password=='':
         return render_template('faculty-login.html',m='Please fill all details')
-    
-    
-
-        
     
     res=coll.find({'username':username, 'password':password})
    
@@ -222,7 +253,7 @@ def facultylogin():
     if res:
         return render_template('faculty-login.html',m='Login Succeessfully')
     else:
-        return render_template('faculty-login.html',m='No user Found!!!')
+        return render_template('faculty-login.html',m='Admin Review Pending [OR] Enter correct details ')
     
     
 
@@ -266,7 +297,7 @@ def studentsignup():
 
 @app.route('/student-login',methods=['POST'])
 def studentlogin():
-    coll=db['signup']
+    coll=db['student']
     username=request.form['username']
     password=request.form['password']
     
@@ -283,63 +314,61 @@ def studentlogin():
     if res:
         return render_template('student-login.html',m='Login Succeessfully')
     else:
-        return render_template('student-login.html',m='No user Found!!!')
+        return render_template('student-login.html',m='Admin Review Pending [OR] Enter correct details ')
 
 
-# @app.route('/add_user/<id>', methods=['POST'])
-# def add_user(id):
-#     fcoll=db['faculty']
-#     scoll=db['student']
-#     sigcoll=db['signup']
-    
-#     name = request.form['name']
-#     userid=request.form['Id']
-#     designation = request.form['Designation']
-#     department = request.form['Department']
-#     username=request.form['username']
-    
-    
-#     d={ 'name':name,'username': username,'Id': userid,'Designation':designation, 'Department':department}
-    
-#     if (designation == 'Student'):
-#         scoll.insert_one(d)
-#         sigcoll.update_one({'username':username},{'$set':{'flag':'1'}})
-#         return {'message': 'User added successfully'}
-#     else:
-#         fcoll.insert_one(d)
-#         sigcoll.update_one({'username':username},{'$set':{'flag':'1'}})
-#         return {'message': 'User added successfully'}
 
 
-@app.route('/add_user/<i>', methods=['GET'])
+@app.route('/add_user/<i>',methods=['GET','POST'])
 def add_user(i):
+    i=ast.literal_eval(i)
+    print(type(i))
     print(i)
+  
     fcoll = db['faculty']
     scoll = db['student']
     
     sigcoll = db['signup']
+        
     
-    data = request.form['data']
-    i = json.loads(data)
     
-    name = i['0']
-    userid = i['2']
-    designation = i['3']
-    department = i['4']
-    username = i['1']
-    
-    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department}
+    name=i[0]
+    username = i[1]
+    userid = i[2]
+    designation = i[3]
+    department = i[4]
+    password=i[5]
+    print(password)
+    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department,'password': password}
     
     if designation == 'Student':
         scoll.insert_one(d)
         sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})
-        return {'message': 'User added successfully'}
+        return redirect('/studentview')
+    
     else:
         fcoll.insert_one(d)
         sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})
-        return {'message': 'User added successfully'}
+        return redirect('/facultyview')
 
+        
+        
 
+@app.route('/remove_user/<i>',methods=['GET','POST'])
+def removeuser(i):
+    print(i)
+    i=ast.literal_eval(i)
+    sigcoll = db['signup']
+        
+    username = i[1]
+    designation = i[3]
+    
+    if designation == 'Student':
+        sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})
+    else:
+        sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})    
+
+    return render_template('requests.html')
 
 if __name__=='__main__':
     

@@ -77,8 +77,13 @@
                 <td class="car">{{ i[4] }}</td>
             
                 <td class="car" style="width:300px">
-                  <button class="btn btn-success" style="margin-right:10px"><a href="/add_user/{{i}}">Add</a></button>
-                    <button class="btn btn-danger" onclick="removefunction({ i })">Remove</button>
+                  <form action="/add_user/{{i}}" methods="post">
+                    <button class="btn btn-success" style="margin-right:10px" type="submit" >Add</button>
+                  </form>
+                  <form action="/remove_user/{{i}}" methods="post">
+                    <button class="btn btn-danger" type="submit">Remove</button>
+                  </form>
+
                 </td>
             </tr>
             {% endfor %}
@@ -87,53 +92,7 @@
     </div>
   </body>
 
-<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    function addfunction(i) {
-        $.ajax({
-            type: "POST",
-            url: "/add_user",  // Update the URL with your Flask route for adding users
-            data: { 'name': i[0] ,'username':i[1],'Id':i[2],'Designation':i[3], 'Department':i[4]},
-            success: function(response) {
-                alert(response);
-            },
-            error: function(error) {
-                alert(error);
-            }
-        });
-    }
 
-    function removefunction(i) {
-        $.ajax({
-            type: "POST",
-            url: "/remove_user",  // Update the URL with your Flask route for removing users
-            data: { username: username },
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    }
-</script> -->
-
-<!-- <script>
-    function addfunction(i) {
-      console.log('Function called')
-        $.ajax({
-            type: "POST",
-            url: "/add_user",  // Update the URL with your Flask route for adding users
-            data: { 'data': i },
-            success: function(response) {
-                alert(response);
-            },
-            error: function(error) {
-                alert(error);
-            }
-        });
-    }
-</script> -->
 
 
 </html>
