@@ -1,5 +1,6 @@
 from flask import Flask,render_template,redirect,request 
 
+import json
 
 from pymongo import MongoClient
 
@@ -81,12 +82,14 @@ def requestshandle():
     d=list(d)
     k=[]
     for i in d:
-        dummy=[]
-        dummy.append(i['fname']+' '+i['lname'])
-        dummy.append(uid(i['department'],i['designation']))
-        dummy.append(i['designation'])
-        dummy.append(i['department'])
-        k.append(dummy)
+        if i['flag'] =='0':
+            dummy=[]
+            dummy.append(i['fname']+' '+i['lname'])
+            dummy.append(i['username'])
+            dummy.append(uid(i['department'],i['designation']))
+            dummy.append(i['designation'])
+            dummy.append(i['department'])
+            k.append(dummy)
     return render_template('requests.html',data=k)
 
 #attendance view by admin
@@ -190,7 +193,7 @@ def facultysignup():
         return render_template('faculty-signup.html',m='Username Already exists please use another username!!!')
     else:
         #now store data into signup
-        d={'fname':fname,'lname':lname,'username':username,'gender':gender,'designation':designation,'department':department,'password':password,'cpassword':cpassword}
+        d={'fname':fname,'lname':lname,'username':username,'gender':gender,'designation':designation,'department':department,'password':password,'cpassword':cpassword,'flag':'0'}
     
         res1=coll.insert_one(d)
         return render_template('faculty-login.html')
@@ -253,7 +256,7 @@ def studentsignup():
         return render_template('student-signup.html',m='Username Already exists please use another username!!!')
     else:
         #now store data into signup
-        d={'fname':fname,'lname':lname,'username':username,'gender':gender,'designation':designation,'department':department,'password':password,'cpassword':cpassword}
+        d={'fname':fname,'lname':lname,'username':username,'gender':gender,'designation':designation,'department':department,'password':password,'cpassword':cpassword,'flag':'0'}
     
         res1=coll.insert_one(d)
         return render_template('student-login.html')
@@ -282,9 +285,60 @@ def studentlogin():
     else:
         return render_template('student-login.html',m='No user Found!!!')
 
-        
-     
+
+# @app.route('/add_user/<id>', methods=['POST'])
+# def add_user(id):
+#     fcoll=db['faculty']
+#     scoll=db['student']
+#     sigcoll=db['signup']
     
+#     name = request.form['name']
+#     userid=request.form['Id']
+#     designation = request.form['Designation']
+#     department = request.form['Department']
+#     username=request.form['username']
+    
+    
+#     d={ 'name':name,'username': username,'Id': userid,'Designation':designation, 'Department':department}
+    
+#     if (designation == 'Student'):
+#         scoll.insert_one(d)
+#         sigcoll.update_one({'username':username},{'$set':{'flag':'1'}})
+#         return {'message': 'User added successfully'}
+#     else:
+#         fcoll.insert_one(d)
+#         sigcoll.update_one({'username':username},{'$set':{'flag':'1'}})
+#         return {'message': 'User added successfully'}
+
+
+@app.route('/add_user/<i>', methods=['GET'])
+def add_user(i):
+    print(i)
+    fcoll = db['faculty']
+    scoll = db['student']
+    
+    sigcoll = db['signup']
+    
+    data = request.form['data']
+    i = json.loads(data)
+    
+    name = i['0']
+    userid = i['2']
+    designation = i['3']
+    department = i['4']
+    username = i['1']
+    
+    d = {'name': name, 'username': username, 'Id': userid, 'Designation': designation, 'Department': department}
+    
+    if designation == 'Student':
+        scoll.insert_one(d)
+        sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})
+        return {'message': 'User added successfully'}
+    else:
+        fcoll.insert_one(d)
+        sigcoll.update_one({'username': username}, {'$set': {'flag': '1'}})
+        return {'message': 'User added successfully'}
+
 
 
 if __name__=='__main__':

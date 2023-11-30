@@ -5,6 +5,9 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <style>
       .car {
         box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
@@ -19,6 +22,13 @@
         width: 80%;
       }
     </style>
+    <script>
+      function addfunction(i) {
+        console.log('Function called');
+        //console.log(i);
+          
+      }
+  </script>
   </head>
   <body>
     <div>
@@ -51,6 +61,7 @@
         <table border="0" class="tab" align="center">
             <tr>
               <th class="car">Name</th>
+              <th class="car">username</th>
               <th class="car">ID</th>
               <th class="car">Designation</th>
               <th class="car">Department</th>
@@ -63,15 +74,68 @@
                 <td class="car">{{ i[1] }}</td>
                 <td class="car">{{ i[2] }}</td>
                 <td class="car">{{ i[3] }}</td>
+                <td class="car">{{ i[4] }}</td>
+            
                 <td class="car" style="width:300px">
-                    <button class="btn btn-success" style="margin-right:10px">Add</button>
-                    <button class="btn btn-danger">Remove</button>
+                  <button class="btn btn-success" style="margin-right:10px"><a href="/add_user/{{i}}">Add</a></button>
+                    <button class="btn btn-danger" onclick="removefunction({ i })">Remove</button>
                 </td>
             </tr>
             {% endfor %}
-        </table>
+            
+          </table>
     </div>
   </body>
+
+<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function addfunction(i) {
+        $.ajax({
+            type: "POST",
+            url: "/add_user",  // Update the URL with your Flask route for adding users
+            data: { 'name': i[0] ,'username':i[1],'Id':i[2],'Designation':i[3], 'Department':i[4]},
+            success: function(response) {
+                alert(response);
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+    }
+
+    function removefunction(i) {
+        $.ajax({
+            type: "POST",
+            url: "/remove_user",  // Update the URL with your Flask route for removing users
+            data: { username: username },
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+</script> -->
+
+<!-- <script>
+    function addfunction(i) {
+      console.log('Function called')
+        $.ajax({
+            type: "POST",
+            url: "/add_user",  // Update the URL with your Flask route for adding users
+            data: { 'data': i },
+            success: function(response) {
+                alert(response);
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+    }
+</script> -->
+
+
 </html>
 
 
