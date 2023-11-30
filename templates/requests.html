@@ -23,6 +23,11 @@
   <body>
     <div>
       <nav class="navbar bg-body-tertiary ">
+      <div class="mb-4" style="margin-left:100px;">
+              <a href="/admin-home">
+                <button class="btn btn-dark btn-lg" type="button">Home</button>
+              </a>
+            </div>
         <div class="container-fluid ">
           <a class="navbar-brand"><h3 >Requests</h3></a>
           <form class="d-flex" role="search">
@@ -32,6 +37,8 @@
               placeholder="Search"
               aria-label="Search"
             />
+
+            
             <button class="btn btn-outline-success" type="submit">
               Search
             </button>
@@ -44,18 +51,27 @@
         <table border="0" class="tab" align="center">
             <tr>
               <th class="car">Name</th>
+              <th class="car">ID</th>
               <th class="car">Designation</th>
               <th class="car">Department</th>
               <th class="car">Decide</th>
             </tr>
+
+            {% for i in data %}
             <tr>
-                <td class="car">Showri</td>
-                <td class="car">Prof.</td>
-                <td class="car">CSE</td>
-                <td class="car" style="width:300px"><button class="btn btn-success" style="margin-right:10px">Add</button><button class="btn  btn-danger">Remove</button></td>
-              </tr>
-            
-          </table>
+                <td class="car">{{ i[0] }}</td>
+                <td class="car">{{ i[1] }}</td>
+                <td class="car">{{ i[2] }}</td>
+                <td class="car">{{ i[3] }}</td>
+                <td class="car" style="width:300px">
+                    <button class="btn btn-success" style="margin-right:10px">Add</button>
+                    <button class="btn btn-danger">Remove</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
   </body>
 </html>
+
+

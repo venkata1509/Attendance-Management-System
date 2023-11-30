@@ -25,9 +25,30 @@ mydb=mysql.connect(
 cursor=mydb.cursor()
 
 
+
+#id generator..
+
+def uid(desg,dept):
+    icoll=db['increments']
+    d=icoll.find()
+    print(d)
+    c=0
+    if desg=='Student':
+        c=d[0]['sinc']
+        icoll.update_one({'sinc': c}, {'$set': {'sinc': str(int(c) + 1)}})    
+    else:
+        c=d[0]['finc']
+        icoll.update_one({'finc': c}, {'$set': {'finc': str(int(c) + 1)}})    
+
+    designation=desg
+    department=dept
+    s='23'+department[0:2]+designation[0:3]+c
+    return s
+    
+
+
+
 #handlers...
-
-
 @app.route('/')
 def start():
     return render_template('index.html')
@@ -59,14 +80,27 @@ def faculty_signup():
 
 
 #requests handling by admin....
+
 @app.route('/requestshandle')
-def  requestshandle():
-    return render_template('requests.html')
+def requestshandle():
+    coll=db['signup']
+    d=coll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+        dummy=[]
+        dummy.append(i['fname']+' '+i['lname'])
+        dummy.append(uid(i['department'],i['designation']))
+        dummy.append(i['designation'])
+        dummy.append(i['department'])
+        k.append(dummy)
+    return render_template('requests.html',data=k)
 
 #attendance view by admin
 
 @app.route('/faculty-attendance')
 def facultyattendance():
+    
     return render_template('faculty-view.html')
     
 
@@ -139,21 +173,124 @@ def adlogin():
 
 @app.route('/faculty-signup',methods=['POST'])
 def facultysignup():
-'''
-fname
-lname
-username
-gender
-designation
-department
-password
-cpassword
-'''
-    pass    
-                     
+    coll=db['signup']
+    fname=request.form['fname']
+    lname=request.form['lname']
+    username=request.form['username']
+    gender=request.form['gender']
+    designation=request.form['designation']
+    department=request.form['department']
+    password=request.form['password']
+    cpassword=request.form['cpassword']
+    print(fname,lname,username,gender,designation,department,password,cpassword)
+    
+    if fname=='' or lname=='' or username=='' or gender=='' or designation=='' or password=='' or cpassword=='' or department=='':
+        return render_template('faculty-signup.html',m='Please Fill all details')
+    if(password != cpassword):
+        return render_template('faculty-signup.html',r='Confirm password not matched')
     
     
+    #check faculty already exists or not..
+    d1=list(coll.find({'username':username}))
     
+    if len(d1)>0:
+        return render_template('faculty-signup.html',m='Username Already exists please use another username!!!')
+    else:
+        #now store data into signup
+        d={'fname':fname,'lname':lname,'username':username,'gender':gender,'designation':designation,'department':department,'password':password,'cpassword':cpassword}
+    
+        res1=coll.insert_one(d)
+        return render_template('faculty-login.html')
+        
+
+#faculty-login
+
+@app.route('/faculty-login',methods=['POST'])
+def facultylogin():
+    coll=db['signup']
+    username=request.form['username']
+    password=request.form['password']
+    
+    if username=='' or  password=='':
+        return render_template('faculty-login.html',m='Please fill all details')
+    
+    
+
+        
+    
+    res=coll.find({'username':username, 'password':password})
+   
+    res= list(res)  # Convert the cursor to a list of documents
+    print(res)
+
+    if res:
+        return render_template('faculty-login.html',m='Login Succeessfully')
+    else:
+        return render_template('faculty-login.html',m='No user Found!!!')
+    
+    
+
+#student-signup
+
+@app.route('/student-signup',methods=['POST'])
+def studentsignup():
+    coll=db['signup']
+    fname=request.form['fname']
+    lname=request.form['lname']
+    username=request.form['username']
+    gender=request.form['gender']
+    designation=request.form['designation']
+    department=request.form['department']
+    password=request.form['password']
+    cpassword=request.form['cpassword']
+    
+    print(fname,lname,username,gender,designation,department,password,cpassword)
+    
+    if fname=='' or lname=='' or username=='' or gender=='' or designation=='' or password=='' or cpassword=='' or department=='':
+        return render_template('student-signup.html',m='Please Fill all details')
+    
+    if(password != cpassword):
+        return render_template('student-signup.html',r='Confirm password not matched')
+    
+    
+    #check faculty already exists or not..
+    d1=list(coll.find({'username':username}))
+    
+    if len(d1)>0:
+        return render_template('student-signup.html',m='Username Already exists please use another username!!!')
+    else:
+        #now store data into signup
+        d={'fname':fname,'lname':lname,'username':username,'gender':gender,'designation':designation,'department':department,'password':password,'cpassword':cpassword}
+    
+        res1=coll.insert_one(d)
+        return render_template('student-login.html')
+        
+
+#student-login
+
+@app.route('/student-login',methods=['POST'])
+def studentlogin():
+    coll=db['signup']
+    username=request.form['username']
+    password=request.form['password']
+    
+    if username=='' or  password=='':
+        return render_template('student-login.html',m='Please fill all details')
+
+        
+    
+    res=coll.find({'username':username, 'password':password})
+   
+    res= list(res)  # Convert the cursor to a list of documents
+    print(res)
+
+    if res:
+        return render_template('student-login.html',m='Login Succeessfully')
+    else:
+        return render_template('student-login.html',m='No user Found!!!')
+
+        
+     
     
 
 
