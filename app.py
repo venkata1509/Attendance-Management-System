@@ -178,14 +178,41 @@ def studentview():
 
 @app.route('/faculty-attendance')
 def facultyattendance():
-    
     return redirect('/facultyview')
 
     
 
+def attendance(Id):
+    acoll=db['attend']
+    d=acoll.find({'Id':Id})
+    d=list(d)
+    c=0
+    p=0
+    if len(d)==0:
+        print(Id,'--->',0)
+        return 0
+    else:
+        c=len(d)
+        p=acoll.find({'Id':Id,'status':'Present'})
+        p=list(p)
+        print(Id,'--->',int((len(p)/c)*100))
+        return int((len(p)/c)*100)
+        
+
 @app.route('/student-attendance')
 def studentattendance():
-    return redirect('/studentview')
+    coll=db['student']
+    d=coll.find()
+    d=list(d)
+    k=[]
+    for i in d:
+            dummy=[]
+            dummy.append(i['Id'])
+            dummy.append(i['name'])
+            dummy.append(i['Department'])
+            dummy.append(attendance(i['Id']))
+            k.append(dummy)
+    return render_template('student-view-admin.html',data=k)
 
 
 
@@ -373,6 +400,30 @@ def facultylogin():
     res= list(res)  # Convert the cursor to a list of documents
     print(res)
     
+    #student-details...
+    
+    # coll=db['student']
+    # d=coll.find()
+    # d=list(d)
+    # k=[]
+    # for i in d:
+    #         dummy=[]
+    #         dummy.append(i['Id'])
+    #         dummy.append(i['name'])
+    #         coll.update_one({'Id':i['Id']},{'$set':{'flag':'0'}})
+    #         k.append(dummy)
+    if res:
+        # coll.update_many({'flag':'0'})
+        # return render_template('fill-attendance.html',data=k,dd=str(datetime.datetime.now().date()))
+        return render_template('faculty-details-view.html',Id=res[0]['Id'],name=res[0]['name'],d=res[0]['Department'])
+    else:
+        return render_template('faculty-login.html',m='Admin Review Pending [OR] Enter correct details ')
+    
+    
+#fill-atttendance
+@app.route('/fillattendance')
+def fillattendance():
+    #student-details...
     coll=db['student']
     d=coll.find()
     d=list(d)
@@ -383,12 +434,7 @@ def facultylogin():
             dummy.append(i['name'])
             coll.update_one({'Id':i['Id']},{'$set':{'flag':'0'}})
             k.append(dummy)
-    if res:
-        # coll.update_many({'flag':'0'})
-        return render_template('fill-attendance.html',data=k,dd=str(datetime.datetime.now().date()))
-    else:
-        return render_template('faculty-login.html',m='Admin Review Pending [OR] Enter correct details ')
-    
+    return render_template('fill-attendance.html',data=k,dd=str(datetime.datetime.now().date()))
     
 
 #student-signup

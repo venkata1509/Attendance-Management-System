@@ -5,173 +5,67 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../static/index.css" />
+
     <style>
-      .car {
-        box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
-        box-decoration-break: clone;
-        max-width: 500px;
-        margin: auto;
-        height: 40px;
-        text-align: center;
-        font-family: arial;
-      }
+      
       .card {
+        
         box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.2);
         max-width: 500px;
-        margin: auto;
+        margin-top: 20px;
         height: 40px;
         text-align: auto;
         padding: 0px 40px;
         font-family: arial;
+
       }
-      .tab {
-        width: 60%;
-      }
-      .scroll {
-        height: 450px;
-        width: 100%;
-        overflow-y: scroll;
-      }
-      .scroll::-webkit-scrollbar {
-        display: none;
-      }
+
+
+      
     </style>
   </head>
   <body>
-    <div>
-      <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand mx-auto"><h3>FACULTY DETAILS</h3></a>
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="navbar bg-body-tertiary">
+          <div class="container-fluid">
+            <a class="navbar-brand mx-auto"><h3>FACULTY DETAILS</h3></a>
+          </div>
+        </nav>
+      </div>
+  <br>
+      <a href="/faculty-login">
+        <button class="btn btn-dark btn-lg" type="button">Logout</button>
+      </a>
+      <br>
+      <br>
+
+      <div class="row">
+        <div class="col-md-6 col-lg-5">
+          <img src="../static/images/blogger.png" style="margin-top:50px;" alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
         </div>
-      </nav>
+    
+        <div class="col-md-6 col-lg-5">
+              <h3 class="card">ID: {{Id}}</h3>
+              <h3 class="card">Name: {{name}}</h3>
+              <h3 class="card">Department: {{d}}</h3>
+              <br><br><br><br>
+            
+                <div class="attendance box" style="background-color:white;align-items:center;text-align:center;padding:10px;width:500px;">
+                  <p>To Take the attendance</p>
+                  <div class="dropdown">
+                      <a href="/fillattendance"><button class="btn btn-success">Click Here</button></a>
+                  </div>
+                </div>   
+
+        </div>
+
+      </div>
     </div>
     <br />
-    <div>
-      <table border="0" class="tab" align="center">
-        <tr>
-          <th><h3 class="card">ID:</h3></th>
-          <th><h3 class="card">Name:</h3></th>
-        </tr>
-      </table>
-    </div>
-    <br />
-    <div class="scroll">
-      <table border="0" class="tab" align="center">
-        <tr>
-          <th class="car">Date</th>
-          <th class="car">Day</th>
-          <th class="car">Status</th>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-          <td class="car"></td>
-          <td class="car"></td>
-          <td class="car"></td>
-        </tr>
-        <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-          <tr>
-            <td class="car"></td>
-            <td class="car"></td>
-            <td class="car"></td>
-          </tr>
-      </table>
-    </div>
-    <br />
-    <div>
-      <h3 class="card">Attedance report: %</h3>
-    </div>
+    
+    
+
   </body>
 </html>
